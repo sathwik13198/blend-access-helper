@@ -11,7 +11,15 @@ import {
   Settings,
   X,
   Minus,
-  Plus
+  Plus,
+  Link,
+  AlignLeft,
+  Play,
+  ImageOff,
+  MousePointer,
+  List,
+  Moon,
+  Sun
 } from 'lucide-react';
 
 interface AccessibilitySettings {
@@ -19,6 +27,13 @@ interface AccessibilitySettings {
   fontSize: number;
   highContrast: boolean;
   dyslexicFont: boolean;
+  highlightLinks: boolean;
+  textSpacing: boolean;
+  pauseAnimations: boolean;
+  hideImages: boolean;
+  largeCursor: boolean;
+  pageStructure: boolean;
+  darkMode: boolean;
 }
 
 const AccessibilityWidget = () => {
@@ -27,6 +42,13 @@ const AccessibilityWidget = () => {
     fontSize: 100,
     highContrast: false,
     dyslexicFont: false,
+    highlightLinks: false,
+    textSpacing: false,
+    pauseAnimations: false,
+    hideImages: false,
+    largeCursor: false,
+    pageStructure: false,
+    darkMode: false,
   });
 
   // Load settings from localStorage on mount
@@ -50,13 +72,14 @@ const AccessibilityWidget = () => {
   // Apply accessibility settings to the document
   const applySettings = (settings: AccessibilitySettings) => {
     const html = document.documentElement;
+    const body = document.body;
     
     // Font size adjustment
     html.style.fontSize = `${settings.fontSize}%`;
     
     // High contrast
     if (settings.highContrast) {
-      html.style.filter = 'contrast(150%) brightness(1.1)';
+      html.style.filter = 'contrast(120%)';
     } else {
       html.style.filter = 'none';
     }
@@ -67,6 +90,56 @@ const AccessibilityWidget = () => {
       html.style.fontFamily = '"OpenDyslexic", sans-serif';
     } else {
       html.style.fontFamily = '';
+    }
+
+    // Dark mode toggle
+    if (settings.darkMode) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+
+    // Highlight links
+    updateStyleRule('highlight-links', settings.highlightLinks ? 
+      'a { border-bottom: 2px solid #FF0000 !important; }' : '');
+
+    // Text spacing
+    updateStyleRule('text-spacing', settings.textSpacing ? 
+      '* { letter-spacing: 0.12em !important; line-height: 1.5 !important; }' : '');
+
+    // Pause animations
+    updateStyleRule('pause-animations', settings.pauseAnimations ? 
+      '*, *::before, *::after { animation-delay: -1ms !important; animation-duration: 1ms !important; animation-iteration-count: 1 !important; background-attachment: initial !important; scroll-behavior: auto !important; }' : '');
+
+    // Hide images
+    updateStyleRule('hide-images', settings.hideImages ? 
+      'img { visibility: hidden !important; }' : '');
+
+    // Large cursor
+    if (settings.largeCursor) {
+      body.style.cursor = 'url("data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'%3E%3Cpath d=\'M2 2 L2 28 L12 18 L18 24 L22 20 L16 14 L26 14 Z\' fill=\'%23000\' stroke=\'%23fff\' stroke-width=\'2\'/%3E%3C/svg%3E") 16 16, auto';
+    } else {
+      body.style.cursor = '';
+    }
+
+    // Page structure outline
+    updateStyleRule('page-structure', settings.pageStructure ? 
+      'h1, h2, h3, h4, h5, h6 { outline: 2px solid #007cba !important; outline-offset: 2px !important; }' : '');
+  };
+
+  // Helper function to update CSS rules
+  const updateStyleRule = (id: string, css: string) => {
+    let style = document.getElementById(`accessibility-${id}`);
+    if (!style && css) {
+      style = document.createElement('style');
+      style.id = `accessibility-${id}`;
+      document.head.appendChild(style);
+    }
+    if (style) {
+      style.textContent = css;
+      if (!css) {
+        style.remove();
+      }
     }
   };
 
@@ -92,6 +165,13 @@ const AccessibilityWidget = () => {
       fontSize: 100,
       highContrast: false,
       dyslexicFont: false,
+      highlightLinks: false,
+      textSpacing: false,
+      pauseAnimations: false,
+      hideImages: false,
+      largeCursor: false,
+      pageStructure: false,
+      darkMode: false,
     };
     updateSettings(defaultSettings);
   };
@@ -177,6 +257,23 @@ const AccessibilityWidget = () => {
 
               <Separator />
 
+              {/* Dark Mode */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {settings.darkMode ? <Moon className="h-4 w-4 text-primary" /> : <Sun className="h-4 w-4 text-primary" />}
+                  <label className="text-sm font-medium text-foreground">
+                    Dark Mode
+                  </label>
+                </div>
+                <Switch
+                  checked={settings.darkMode}
+                  onCheckedChange={(checked) => updateSettings({ darkMode: checked })}
+                  aria-label="Toggle dark mode"
+                />
+              </div>
+
+              <Separator />
+
               {/* Dyslexic Font */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -189,6 +286,108 @@ const AccessibilityWidget = () => {
                   checked={settings.dyslexicFont}
                   onCheckedChange={(checked) => updateSettings({ dyslexicFont: checked })}
                   aria-label="Toggle dyslexia-friendly font"
+                />
+              </div>
+
+              <Separator />
+
+              {/* Highlight Links */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Link className="h-4 w-4 text-primary" />
+                  <label className="text-sm font-medium text-foreground">
+                    Highlight Links
+                  </label>
+                </div>
+                <Switch
+                  checked={settings.highlightLinks}
+                  onCheckedChange={(checked) => updateSettings({ highlightLinks: checked })}
+                  aria-label="Toggle link highlighting"
+                />
+              </div>
+
+              <Separator />
+
+              {/* Text Spacing */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <AlignLeft className="h-4 w-4 text-primary" />
+                  <label className="text-sm font-medium text-foreground">
+                    Text Spacing
+                  </label>
+                </div>
+                <Switch
+                  checked={settings.textSpacing}
+                  onCheckedChange={(checked) => updateSettings({ textSpacing: checked })}
+                  aria-label="Toggle text spacing"
+                />
+              </div>
+
+              <Separator />
+
+              {/* Pause Animations */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Play className="h-4 w-4 text-primary" />
+                  <label className="text-sm font-medium text-foreground">
+                    Pause Animations
+                  </label>
+                </div>
+                <Switch
+                  checked={settings.pauseAnimations}
+                  onCheckedChange={(checked) => updateSettings({ pauseAnimations: checked })}
+                  aria-label="Toggle animation pausing"
+                />
+              </div>
+
+              <Separator />
+
+              {/* Hide Images */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ImageOff className="h-4 w-4 text-primary" />
+                  <label className="text-sm font-medium text-foreground">
+                    Hide Images
+                  </label>
+                </div>
+                <Switch
+                  checked={settings.hideImages}
+                  onCheckedChange={(checked) => updateSettings({ hideImages: checked })}
+                  aria-label="Toggle image visibility"
+                />
+              </div>
+
+              <Separator />
+
+              {/* Large Cursor */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MousePointer className="h-4 w-4 text-primary" />
+                  <label className="text-sm font-medium text-foreground">
+                    Large Cursor
+                  </label>
+                </div>
+                <Switch
+                  checked={settings.largeCursor}
+                  onCheckedChange={(checked) => updateSettings({ largeCursor: checked })}
+                  aria-label="Toggle large cursor"
+                />
+              </div>
+
+              <Separator />
+
+              {/* Page Structure */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <List className="h-4 w-4 text-primary" />
+                  <label className="text-sm font-medium text-foreground">
+                    Page Structure
+                  </label>
+                </div>
+                <Switch
+                  checked={settings.pageStructure}
+                  onCheckedChange={(checked) => updateSettings({ pageStructure: checked })}
+                  aria-label="Toggle page structure outline"
                 />
               </div>
 
