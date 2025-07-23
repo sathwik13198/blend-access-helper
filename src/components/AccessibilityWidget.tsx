@@ -25,7 +25,7 @@ import {
 interface AccessibilitySettings {
   isOpen: boolean;
   fontSize: number;
-  highContrast: boolean;
+  contrast: number;
   dyslexicFont: boolean;
   highlightLinks: boolean;
   textSpacing: boolean;
@@ -40,7 +40,7 @@ const AccessibilityWidget = () => {
   const [settings, setSettings] = useState<AccessibilitySettings>({
     isOpen: false,
     fontSize: 100,
-    highContrast: false,
+    contrast: 100,
     dyslexicFont: false,
     highlightLinks: false,
     textSpacing: false,
@@ -77,12 +77,8 @@ const AccessibilityWidget = () => {
     // Font size adjustment
     html.style.fontSize = `${settings.fontSize}%`;
     
-    // High contrast
-    if (settings.highContrast) {
-      html.style.filter = 'contrast(120%)';
-    } else {
-      html.style.filter = 'none';
-    }
+    // Contrast adjustment
+    html.style.filter = `contrast(${settings.contrast}%)`;
     
     // Dyslexic font
     if (settings.dyslexicFont) {
@@ -160,10 +156,16 @@ const AccessibilityWidget = () => {
     updateSettings({ fontSize: newSize });
   };
 
+  const adjustContrast = (direction: 'increase' | 'decrease') => {
+    const change = direction === 'increase' ? 10 : -10;
+    const newContrast = Math.max(50, Math.min(200, settings.contrast + change));
+    updateSettings({ contrast: newContrast });
+  };
+
   const resetSettings = () => {
     const defaultSettings = {
       fontSize: 100,
-      highContrast: false,
+      contrast: 100,
       dyslexicFont: false,
       highlightLinks: false,
       textSpacing: false,
@@ -240,19 +242,39 @@ const AccessibilityWidget = () => {
 
               <Separator />
 
-              {/* High Contrast */}
-              <div className="flex items-center justify-between">
+              {/* Contrast Adjustment */}
+              <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Eye className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    High Contrast
+                    Contrast
                   </label>
                 </div>
-                <Switch
-                  checked={settings.highContrast}
-                  onCheckedChange={(checked) => updateSettings({ highContrast: checked })}
-                  aria-label="Toggle high contrast mode"
-                />
+                <div className="flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustContrast('decrease')}
+                    disabled={settings.contrast <= 50}
+                    className="h-8 w-8 p-0"
+                    aria-label="Decrease contrast"
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                  <span className="text-sm text-muted-foreground min-w-[3rem] text-center">
+                    {settings.contrast}%
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustContrast('increase')}
+                    disabled={settings.contrast >= 200}
+                    className="h-8 w-8 p-0"
+                    aria-label="Increase contrast"
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
               </div>
 
               <Separator />
