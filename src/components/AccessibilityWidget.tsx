@@ -182,7 +182,7 @@ const AccessibilityWidget = () => {
     <div className="fixed bottom-6 right-6 z-50">
       {/* Control Panel */}
       {settings.isOpen && (
-        <Card className="absolute bottom-16 right-0 w-80 bg-widget-background border-widget-border shadow-widget animate-slide-up">
+        <Card className="absolute bottom-16 right-0 w-80 bg-background border-border shadow-lg animate-slide-up">
           <div className="p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
@@ -431,7 +431,7 @@ const AccessibilityWidget = () => {
       {/* Floating Button */}
       <Button
         onClick={() => updateSettings({ isOpen: !settings.isOpen })}
-        className="h-14 w-14 rounded-full shadow-button animate-bounce-in hover:scale-105 transition-all duration-300"
+        className="h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg animate-bounce-in hover:scale-105 hover:shadow-xl transition-all duration-300"
         aria-label={settings.isOpen ? 'Close accessibility options' : 'Open accessibility options'}
         aria-expanded={settings.isOpen}
       >

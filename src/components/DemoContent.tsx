@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, Star, MessageCircle, Share2, ExternalLink, ArrowRight, Sparkles } from 'lucide-react';
+import EmbedDemo from './EmbedDemo';
 
 const DemoContent = () => {
   return (
@@ -237,6 +238,13 @@ const DemoContent = () => {
               </Button>
             </div>
           </article>
+        </div>
+      </section>
+
+      {/* Embed Demo Section */}
+      <section className="py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <EmbedDemo />
         </div>
       </section>
 
