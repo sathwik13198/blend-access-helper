@@ -4,8 +4,24 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, Star, MessageCircle, Share2, ExternalLink, ArrowRight, Sparkles } from 'lucide-react';
 import EmbedDemo from './EmbedDemo';
+import AccessibilityWidget from '@/components/AccessibilityWidget';
+import AiChatbot from '@/components/AiChatbot';
 
 const DemoContent = () => {
+  // Get current language from accessibility widget
+  const getCurrentLanguage = () => {
+    const langElement = document.querySelector('[data-current-language]');
+    return (langElement?.getAttribute('data-current-language') as 'en' | 'es') || 'en';
+  };
+
+  const [currentLanguage, setCurrentLanguage] = React.useState<'en' | 'es'>('en');
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentLanguage(getCurrentLanguage());
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div className="min-h-screen bg-background animate-fade-in">
       {/* Hero Section */}
@@ -256,6 +272,12 @@ const DemoContent = () => {
           </p>
         </div>
       </footer>
+
+      {/* Accessibility Widget */}
+      <AccessibilityWidget />
+      
+      {/* AI Chatbot - separate from accessibility widget */}
+      <AiChatbot language={currentLanguage} />
     </div>
   );
 };

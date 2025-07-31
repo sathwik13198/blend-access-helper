@@ -4,7 +4,6 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { 
   Accessibility, 
   Type, 
@@ -22,12 +21,9 @@ import {
   List,
   Moon,
   Sun,
-  MessageCircle,
-  Send,
   Languages,
   RotateCcw
 } from 'lucide-react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface AccessibilitySettings {
   isOpen: boolean;
@@ -61,9 +57,6 @@ const translations = {
     pageStructure: 'Page Structure',
     resetDefault: 'Reset to Default',
     language: 'Language',
-    aiAssistant: 'AI Assistant',
-    askQuestion: 'Ask a question...',
-    send: 'Send',
     resetLanguage: 'Reset Language',
     closePanel: 'Close accessibility panel',
     openPanel: 'Open accessibility options',
@@ -94,9 +87,6 @@ const translations = {
     pageStructure: 'Estructura de Página',
     resetDefault: 'Restablecer por Defecto',
     language: 'Idioma',
-    aiAssistant: 'Asistente IA',
-    askQuestion: 'Haz una pregunta...',
-    send: 'Enviar',
     resetLanguage: 'Restablecer Idioma',
     closePanel: 'Cerrar panel de accesibilidad',
     openPanel: 'Abrir opciones de accesibilidad',
@@ -131,10 +121,6 @@ const AccessibilityWidget = () => {
   });
 
   const [language, setLanguage] = useState<Language>('en');
-  const [aiQuestion, setAiQuestion] = useState('');
-  const [aiResponse, setAiResponse] = useState('');
-  const [isAiLoading, setIsAiLoading] = useState(false);
-  const [showAiChat, setShowAiChat] = useState(false);
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -267,41 +253,15 @@ const AccessibilityWidget = () => {
     setLanguage('en');
   };
 
-  const handleAiQuestion = async () => {
-    if (!aiQuestion.trim()) return;
-    
-    setIsAiLoading(true);
-    try {
-      // For demo purposes, using a placeholder API key
-      // In production, this should come from Supabase secrets
-      const apiKey = 'YOUR_GEMINI_API_KEY_HERE'; // This should be replaced with actual API key
-      
-      if (apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
-        // Fallback demo response when no API key is provided
-        setAiResponse(`Demo response: Thank you for asking "${aiQuestion}". This is a demo response. Please configure your Google Gemini API key in Supabase secrets to get real AI responses.`);
-      } else {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-        
-        const result = await model.generateContent(aiQuestion);
-        const response = await result.response;
-        setAiResponse(response.text());
-      }
-    } catch (error) {
-      setAiResponse('Sorry, I encountered an error. Please try again later.');
-    } finally {
-      setIsAiLoading(false);
-      setAiQuestion('');
-    }
-  };
-
   const t = translations[language];
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
+      {/* Export language for AI chatbot */}
+      <div style={{ display: 'none' }} data-current-language={language}></div>
       {/* Control Panel */}
       {settings.isOpen && (
-        <Card className="absolute bottom-16 right-0 w-80 bg-background border-border shadow-lg animate-slide-up">
+        <Card className="absolute bottom-16 right-0 w-80 bg-background border-border shadow-lg animate-slide-up max-h-[32rem] overflow-y-auto">
           <div className="p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
@@ -351,58 +311,6 @@ const AccessibilityWidget = () => {
               </div>
             </div>
 
-            {/* AI Assistant */}
-            <div className="space-y-3 mb-6">
-              <div className="flex items-center gap-2">
-                <MessageCircle className="h-4 w-4 text-primary" />
-                <label className="text-sm font-medium text-foreground">
-                  {t.aiAssistant}
-                </label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowAiChat(!showAiChat)}
-                  className="ml-auto h-6 w-6 p-0"
-                >
-                  {showAiChat ? <X className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
-                </Button>
-              </div>
-              
-              {showAiChat && (
-                <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input
-                      value={aiQuestion}
-                      onChange={(e) => setAiQuestion(e.target.value)}
-                      placeholder={t.askQuestion}
-                      className="flex-1"
-                      onKeyDown={(e) => e.key === 'Enter' && handleAiQuestion()}
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleAiQuestion}
-                      disabled={isAiLoading || !aiQuestion.trim()}
-                      className="px-3"
-                    >
-                      {isAiLoading ? (
-                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                      ) : (
-                        <Send className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                  
-                  {aiResponse && (
-                    <div className="p-3 bg-muted rounded-md text-sm text-muted-foreground max-h-32 overflow-y-auto">
-                      {aiResponse}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <Separator />
 
             {/* Controls */}
             <div className="space-y-6">
@@ -643,3 +551,4 @@ const AccessibilityWidget = () => {
 };
 
 export default AccessibilityWidget;
+export { type Language };
