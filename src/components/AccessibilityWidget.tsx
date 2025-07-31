@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { 
   Accessibility, 
   Type, 
@@ -19,8 +21,13 @@ import {
   MousePointer,
   List,
   Moon,
-  Sun
+  Sun,
+  MessageCircle,
+  Send,
+  Languages,
+  RotateCcw
 } from 'lucide-react';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface AccessibilitySettings {
   isOpen: boolean;
@@ -36,6 +43,78 @@ interface AccessibilitySettings {
   darkMode: boolean;
 }
 
+type Language = 'en' | 'es';
+
+// Translation object embedded in the code
+const translations = {
+  en: {
+    accessibility: 'Accessibility',
+    textSize: 'Text Size',
+    contrast: 'Contrast',
+    darkMode: 'Dark Mode',
+    dyslexiaFont: 'Dyslexia-Friendly Font',
+    highlightLinks: 'Highlight Links',
+    textSpacing: 'Text Spacing',
+    pauseAnimations: 'Pause Animations',
+    hideImages: 'Hide Images',
+    largeCursor: 'Large Cursor',
+    pageStructure: 'Page Structure',
+    resetDefault: 'Reset to Default',
+    language: 'Language',
+    aiAssistant: 'AI Assistant',
+    askQuestion: 'Ask a question...',
+    send: 'Send',
+    resetLanguage: 'Reset Language',
+    closePanel: 'Close accessibility panel',
+    openPanel: 'Open accessibility options',
+    decreaseTextSize: 'Decrease text size',
+    increaseTextSize: 'Increase text size',
+    decreaseContrast: 'Decrease contrast',
+    increaseContrast: 'Increase contrast',
+    toggleDarkMode: 'Toggle dark mode',
+    toggleDyslexicFont: 'Toggle dyslexia-friendly font',
+    toggleLinkHighlight: 'Toggle link highlighting',
+    toggleTextSpacing: 'Toggle text spacing',
+    toggleAnimationPause: 'Toggle animation pausing',
+    toggleImageVisibility: 'Toggle image visibility',
+    toggleLargeCursor: 'Toggle large cursor',
+    togglePageStructure: 'Toggle page structure outline',
+  },
+  es: {
+    accessibility: 'Accesibilidad',
+    textSize: 'Tamaño de Texto',
+    contrast: 'Contraste',
+    darkMode: 'Modo Oscuro',
+    dyslexiaFont: 'Fuente para Dislexia',
+    highlightLinks: 'Resaltar Enlaces',
+    textSpacing: 'Espaciado de Texto',
+    pauseAnimations: 'Pausar Animaciones',
+    hideImages: 'Ocultar Imágenes',
+    largeCursor: 'Cursor Grande',
+    pageStructure: 'Estructura de Página',
+    resetDefault: 'Restablecer por Defecto',
+    language: 'Idioma',
+    aiAssistant: 'Asistente IA',
+    askQuestion: 'Haz una pregunta...',
+    send: 'Enviar',
+    resetLanguage: 'Restablecer Idioma',
+    closePanel: 'Cerrar panel de accesibilidad',
+    openPanel: 'Abrir opciones de accesibilidad',
+    decreaseTextSize: 'Disminuir tamaño de texto',
+    increaseTextSize: 'Aumentar tamaño de texto',
+    decreaseContrast: 'Disminuir contraste',
+    increaseContrast: 'Aumentar contraste',
+    toggleDarkMode: 'Alternar modo oscuro',
+    toggleDyslexicFont: 'Alternar fuente para dislexia',
+    toggleLinkHighlight: 'Alternar resaltado de enlaces',
+    toggleTextSpacing: 'Alternar espaciado de texto',
+    toggleAnimationPause: 'Alternar pausa de animaciones',
+    toggleImageVisibility: 'Alternar visibilidad de imágenes',
+    toggleLargeCursor: 'Alternar cursor grande',
+    togglePageStructure: 'Alternar estructura de página',
+  }
+};
+
 const AccessibilityWidget = () => {
   const [settings, setSettings] = useState<AccessibilitySettings>({
     isOpen: false,
@@ -50,6 +129,12 @@ const AccessibilityWidget = () => {
     pageStructure: false,
     darkMode: false,
   });
+
+  const [language, setLanguage] = useState<Language>('en');
+  const [aiQuestion, setAiQuestion] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [showAiChat, setShowAiChat] = useState(false);
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -178,6 +263,40 @@ const AccessibilityWidget = () => {
     updateSettings(defaultSettings);
   };
 
+  const resetLanguage = () => {
+    setLanguage('en');
+  };
+
+  const handleAiQuestion = async () => {
+    if (!aiQuestion.trim()) return;
+    
+    setIsAiLoading(true);
+    try {
+      // For demo purposes, using a placeholder API key
+      // In production, this should come from Supabase secrets
+      const apiKey = 'YOUR_GEMINI_API_KEY_HERE'; // This should be replaced with actual API key
+      
+      if (apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
+        // Fallback demo response when no API key is provided
+        setAiResponse(`Demo response: Thank you for asking "${aiQuestion}". This is a demo response. Please configure your Google Gemini API key in Supabase secrets to get real AI responses.`);
+      } else {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        
+        const result = await model.generateContent(aiQuestion);
+        const response = await result.response;
+        setAiResponse(response.text());
+      }
+    } catch (error) {
+      setAiResponse('Sorry, I encountered an error. Please try again later.');
+    } finally {
+      setIsAiLoading(false);
+      setAiQuestion('');
+    }
+  };
+
+  const t = translations[language];
+
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {/* Control Panel */}
@@ -189,7 +308,7 @@ const AccessibilityWidget = () => {
               <div className="flex items-center gap-2">
                 <Settings className="h-5 w-5 text-primary" />
                 <h2 className="text-lg font-semibold text-foreground">
-                  Accessibility
+                  {t.accessibility}
                 </h2>
               </div>
               <Button
@@ -197,11 +316,93 @@ const AccessibilityWidget = () => {
                 size="sm"
                 onClick={() => updateSettings({ isOpen: false })}
                 className="h-8 w-8 p-0"
-                aria-label="Close accessibility panel"
+                aria-label={t.closePanel}
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
+
+            {/* Language Selection */}
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center gap-2">
+                <Languages className="h-4 w-4 text-primary" />
+                <label className="text-sm font-medium text-foreground">
+                  {t.language}
+                </label>
+              </div>
+              <div className="flex gap-2">
+                <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="es">Español</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={resetLanguage}
+                  className="px-3"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* AI Assistant */}
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4 text-primary" />
+                <label className="text-sm font-medium text-foreground">
+                  {t.aiAssistant}
+                </label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAiChat(!showAiChat)}
+                  className="ml-auto h-6 w-6 p-0"
+                >
+                  {showAiChat ? <X className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+                </Button>
+              </div>
+              
+              {showAiChat && (
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Input
+                      value={aiQuestion}
+                      onChange={(e) => setAiQuestion(e.target.value)}
+                      placeholder={t.askQuestion}
+                      className="flex-1"
+                      onKeyDown={(e) => e.key === 'Enter' && handleAiQuestion()}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAiQuestion}
+                      disabled={isAiLoading || !aiQuestion.trim()}
+                      className="px-3"
+                    >
+                      {isAiLoading ? (
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  
+                  {aiResponse && (
+                    <div className="p-3 bg-muted rounded-md text-sm text-muted-foreground max-h-32 overflow-y-auto">
+                      {aiResponse}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <Separator />
 
             {/* Controls */}
             <div className="space-y-6">
@@ -210,7 +411,7 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <Type className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Text Size
+                    {t.textSize}
                   </label>
                 </div>
                 <div className="flex items-center justify-between">
@@ -220,7 +421,7 @@ const AccessibilityWidget = () => {
                     onClick={() => adjustFontSize('decrease')}
                     disabled={settings.fontSize <= 80}
                     className="h-8 w-8 p-0"
-                    aria-label="Decrease text size"
+                    aria-label={t.decreaseTextSize}
                   >
                     <Minus className="h-3 w-3" />
                   </Button>
@@ -233,7 +434,7 @@ const AccessibilityWidget = () => {
                     onClick={() => adjustFontSize('increase')}
                     disabled={settings.fontSize >= 150}
                     className="h-8 w-8 p-0"
-                    aria-label="Increase text size"
+                    aria-label={t.increaseTextSize}
                   >
                     <Plus className="h-3 w-3" />
                   </Button>
@@ -247,7 +448,7 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <Eye className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Contrast
+                    {t.contrast}
                   </label>
                 </div>
                 <div className="flex items-center justify-between">
@@ -257,7 +458,7 @@ const AccessibilityWidget = () => {
                     onClick={() => adjustContrast('decrease')}
                     disabled={settings.contrast <= 50}
                     className="h-8 w-8 p-0"
-                    aria-label="Decrease contrast"
+                    aria-label={t.decreaseContrast}
                   >
                     <Minus className="h-3 w-3" />
                   </Button>
@@ -270,7 +471,7 @@ const AccessibilityWidget = () => {
                     onClick={() => adjustContrast('increase')}
                     disabled={settings.contrast >= 200}
                     className="h-8 w-8 p-0"
-                    aria-label="Increase contrast"
+                    aria-label={t.increaseContrast}
                   >
                     <Plus className="h-3 w-3" />
                   </Button>
@@ -284,13 +485,13 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   {settings.darkMode ? <Moon className="h-4 w-4 text-primary" /> : <Sun className="h-4 w-4 text-primary" />}
                   <label className="text-sm font-medium text-foreground">
-                    Dark Mode
+                    {t.darkMode}
                   </label>
                 </div>
                 <Switch
                   checked={settings.darkMode}
                   onCheckedChange={(checked) => updateSettings({ darkMode: checked })}
-                  aria-label="Toggle dark mode"
+                  aria-label={t.toggleDarkMode}
                 />
               </div>
 
@@ -301,13 +502,13 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <Palette className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Dyslexia-Friendly Font
+                    {t.dyslexiaFont}
                   </label>
                 </div>
                 <Switch
                   checked={settings.dyslexicFont}
                   onCheckedChange={(checked) => updateSettings({ dyslexicFont: checked })}
-                  aria-label="Toggle dyslexia-friendly font"
+                  aria-label={t.toggleDyslexicFont}
                 />
               </div>
 
@@ -318,13 +519,13 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <Link className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Highlight Links
+                    {t.highlightLinks}
                   </label>
                 </div>
                 <Switch
                   checked={settings.highlightLinks}
                   onCheckedChange={(checked) => updateSettings({ highlightLinks: checked })}
-                  aria-label="Toggle link highlighting"
+                  aria-label={t.toggleLinkHighlight}
                 />
               </div>
 
@@ -335,13 +536,13 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <AlignLeft className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Text Spacing
+                    {t.textSpacing}
                   </label>
                 </div>
                 <Switch
                   checked={settings.textSpacing}
                   onCheckedChange={(checked) => updateSettings({ textSpacing: checked })}
-                  aria-label="Toggle text spacing"
+                  aria-label={t.toggleTextSpacing}
                 />
               </div>
 
@@ -352,13 +553,13 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <Play className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Pause Animations
+                    {t.pauseAnimations}
                   </label>
                 </div>
                 <Switch
                   checked={settings.pauseAnimations}
                   onCheckedChange={(checked) => updateSettings({ pauseAnimations: checked })}
-                  aria-label="Toggle animation pausing"
+                  aria-label={t.toggleAnimationPause}
                 />
               </div>
 
@@ -369,13 +570,13 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <ImageOff className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Hide Images
+                    {t.hideImages}
                   </label>
                 </div>
                 <Switch
                   checked={settings.hideImages}
                   onCheckedChange={(checked) => updateSettings({ hideImages: checked })}
-                  aria-label="Toggle image visibility"
+                  aria-label={t.toggleImageVisibility}
                 />
               </div>
 
@@ -386,13 +587,13 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <MousePointer className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Large Cursor
+                    {t.largeCursor}
                   </label>
                 </div>
                 <Switch
                   checked={settings.largeCursor}
                   onCheckedChange={(checked) => updateSettings({ largeCursor: checked })}
-                  aria-label="Toggle large cursor"
+                  aria-label={t.toggleLargeCursor}
                 />
               </div>
 
@@ -403,13 +604,13 @@ const AccessibilityWidget = () => {
                 <div className="flex items-center gap-2">
                   <List className="h-4 w-4 text-primary" />
                   <label className="text-sm font-medium text-foreground">
-                    Page Structure
+                    {t.pageStructure}
                   </label>
                 </div>
                 <Switch
                   checked={settings.pageStructure}
                   onCheckedChange={(checked) => updateSettings({ pageStructure: checked })}
-                  aria-label="Toggle page structure outline"
+                  aria-label={t.togglePageStructure}
                 />
               </div>
 
@@ -421,7 +622,7 @@ const AccessibilityWidget = () => {
                 onClick={resetSettings}
                 className="w-full"
               >
-                Reset to Default
+                {t.resetDefault}
               </Button>
             </div>
           </div>
@@ -432,7 +633,7 @@ const AccessibilityWidget = () => {
       <Button
         onClick={() => updateSettings({ isOpen: !settings.isOpen })}
         className="h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg animate-bounce-in hover:scale-105 hover:shadow-xl transition-all duration-300"
-        aria-label={settings.isOpen ? 'Close accessibility options' : 'Open accessibility options'}
+        aria-label={settings.isOpen ? t.closePanel : t.openPanel}
         aria-expanded={settings.isOpen}
       >
         <Accessibility className="h-6 w-6" />
