@@ -7,6 +7,152 @@ import EmbedDemo from './EmbedDemo';
 import AccessibilityWidget from '@/components/AccessibilityWidget';
 import AiChatbot from '@/components/AiChatbot';
 
+// Translation content for the entire page
+const translations = {
+  en: {
+    hero: {
+      title: 'Skillblend Accessibility Widget',
+      description: 'Experience how our accessibility widget transforms the browsing experience. Use the floating button in the bottom-right corner to adjust text size, contrast, and font preferences.',
+      badges: {
+        accessibilityFirst: 'Accessibility First',
+        wcagCompliant: 'WCAG Compliant',
+        easyIntegration: 'Easy Integration'
+      },
+      buttons: {
+        tryDemo: 'Try Demo',
+        learnMore: 'Learn More'
+      }
+    },
+    features: {
+      title: 'Test the Accessibility Features',
+      fontSizeControl: {
+        title: 'Font Size Control',
+        description: 'Adjust text size from 80% to 150% to improve readability for users with visual impairments.',
+        content: 'This text will resize when you adjust the font size setting. Try increasing or decreasing the text size to see how it affects readability.',
+        button: 'Example Button'
+      },
+      contrastControl: {
+        title: 'Contrast Control',
+        description: 'Adjustable contrast from 50% to 200% for better visibility and reduced eye strain.',
+        content: 'When contrast is adjusted, all colors become more or less vivid and text becomes easier to distinguish from backgrounds.',
+        buttons: {
+          primary: 'Primary',
+          secondary: 'Secondary'
+        }
+      },
+      dyslexiaFont: {
+        title: 'Dyslexia-Friendly Font',
+        description: 'OpenDyslexic font designed to reduce reading errors and improve comprehension.',
+        content: 'This text will change to OpenDyslexic font when the dyslexia-friendly option is enabled. The font is specially designed to make reading easier.',
+        badge: 'Try Me!'
+      }
+    },
+    gallery: {
+      title: 'Image Gallery - Test Hide Images Feature',
+      badges: {
+        accessibilityTools: 'Accessibility Tools',
+        userInterface: 'User Interface',
+        inclusiveDesign: 'Inclusive Design'
+      }
+    },
+    article: {
+      title: 'Why Accessibility Matters',
+      intro: 'Web accessibility ensures that websites, tools, and technologies are designed and developed so that people with disabilities can use them. This includes people with visual, auditory, motor, and cognitive disabilities.',
+      links: {
+        wai: 'Learn more about WAI Guidelines',
+        webaim: 'WebAIM Resources',
+        ada: 'ADA Compliance Information'
+      },
+      benefitsTitle: 'Benefits for Everyone',
+      benefits: [
+        'Improved readability for users with dyslexia or reading difficulties',
+        'Better contrast for users with visual impairments or in bright environments',
+        'Flexible text sizing for users with varying vision needs',
+        'Enhanced usability for all users, not just those with disabilities'
+      ],
+      quote: '"The power of the Web is in its universality. Access by everyone regardless of disability is an essential aspect." - Tim Berners-Lee, W3C Director',
+      buttons: {
+        like: 'Like',
+        comment: 'Comment',
+        share: 'Share',
+        save: 'Save'
+      }
+    },
+    footer: 'Skillblend Accessibility Widget Demo • Built with React & Tailwind CSS'
+  },
+  es: {
+    hero: {
+      title: 'Widget de Accesibilidad Skillblend',
+      description: 'Experimenta cómo nuestro widget de accesibilidad transforma la experiencia de navegación. Usa el botón flotante en la esquina inferior derecha para ajustar el tamaño del texto, contraste y preferencias de fuente.',
+      badges: {
+        accessibilityFirst: 'Accesibilidad Primero',
+        wcagCompliant: 'Compatible con WCAG',
+        easyIntegration: 'Integración Fácil'
+      },
+      buttons: {
+        tryDemo: 'Probar Demo',
+        learnMore: 'Saber Más'
+      }
+    },
+    features: {
+      title: 'Prueba las Características de Accesibilidad',
+      fontSizeControl: {
+        title: 'Control de Tamaño de Fuente',
+        description: 'Ajusta el tamaño del texto del 80% al 150% para mejorar la legibilidad para usuarios con discapacidades visuales.',
+        content: 'Este texto cambiará de tamaño cuando ajustes la configuración del tamaño de fuente. Prueba aumentar o disminuir el tamaño del texto para ver cómo afecta la legibilidad.',
+        button: 'Botón de Ejemplo'
+      },
+      contrastControl: {
+        title: 'Control de Contraste',
+        description: 'Contraste ajustable del 50% al 200% para mejor visibilidad y reducción de fatiga visual.',
+        content: 'Cuando se ajusta el contraste, todos los colores se vuelven más o menos vívidos y el texto se vuelve más fácil de distinguir de los fondos.',
+        buttons: {
+          primary: 'Primario',
+          secondary: 'Secundario'
+        }
+      },
+      dyslexiaFont: {
+        title: 'Fuente Amigable para Dislexia',
+        description: 'Fuente OpenDyslexic diseñada para reducir errores de lectura y mejorar la comprensión.',
+        content: 'Este texto cambiará a la fuente OpenDyslexic cuando la opción amigable para dislexia esté habilitada. La fuente está especialmente diseñada para hacer la lectura más fácil.',
+        badge: '¡Pruébame!'
+      }
+    },
+    gallery: {
+      title: 'Galería de Imágenes - Prueba la Función Ocultar Imágenes',
+      badges: {
+        accessibilityTools: 'Herramientas de Accesibilidad',
+        userInterface: 'Interfaz de Usuario',
+        inclusiveDesign: 'Diseño Inclusivo'
+      }
+    },
+    article: {
+      title: 'Por Qué Importa la Accesibilidad',
+      intro: 'La accesibilidad web asegura que los sitios web, herramientas y tecnologías estén diseñados y desarrollados para que las personas con discapacidades puedan usarlos. Esto incluye personas con discapacidades visuales, auditivas, motoras y cognitivas.',
+      links: {
+        wai: 'Aprende más sobre las Directrices WAI',
+        webaim: 'Recursos WebAIM',
+        ada: 'Información de Cumplimiento ADA'
+      },
+      benefitsTitle: 'Beneficios para Todos',
+      benefits: [
+        'Mejor legibilidad para usuarios con dislexia o dificultades de lectura',
+        'Mejor contraste para usuarios con discapacidades visuales o en ambientes brillantes',
+        'Tamaño de texto flexible para usuarios con diferentes necesidades de visión',
+        'Usabilidad mejorada para todos los usuarios, no solo aquellos con discapacidades'
+      ],
+      quote: '"El poder de la Web está en su universalidad. El acceso por parte de todos, independientemente de la discapacidad, es un aspecto esencial." - Tim Berners-Lee, Director del W3C',
+      buttons: {
+        like: 'Me Gusta',
+        comment: 'Comentar',
+        share: 'Compartir',
+        save: 'Guardar'
+      }
+    },
+    footer: 'Demo del Widget de Accesibilidad Skillblend • Construido con React y Tailwind CSS'
+  }
+};
+
 const DemoContent = () => {
   // Get current language from accessibility widget
   const getCurrentLanguage = () => {
@@ -22,6 +168,9 @@ const DemoContent = () => {
     }, 100);
     return () => clearInterval(interval);
   }, []);
+
+  const t = translations[currentLanguage];
+
   return (
     <div className="min-h-screen bg-background animate-fade-in">
       {/* Hero Section */}
@@ -36,26 +185,24 @@ const DemoContent = () => {
             />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 animate-slide-up">
-            Skillblend Accessibility Widget
+            {t.hero.title}
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in">
-            Experience how our accessibility widget transforms the browsing experience. 
-            Use the floating button in the bottom-right corner to adjust text size, 
-            contrast, and font preferences.
+            {t.hero.description}
           </p>
           <div className="flex flex-wrap gap-3 justify-center mb-8">
-            <Badge variant="secondary" className="hover-scale">Accessibility First</Badge>
-            <Badge variant="secondary" className="hover-scale">WCAG Compliant</Badge>
-            <Badge variant="secondary" className="hover-scale">Easy Integration</Badge>
+            <Badge variant="secondary" className="hover-scale">{t.hero.badges.accessibilityFirst}</Badge>
+            <Badge variant="secondary" className="hover-scale">{t.hero.badges.wcagCompliant}</Badge>
+            <Badge variant="secondary" className="hover-scale">{t.hero.badges.easyIntegration}</Badge>
           </div>
           <div className="flex gap-4 justify-center">
             <Button className="animate-bounce-in hover:scale-105 transition-all duration-300">
               <Sparkles className="h-4 w-4 mr-2" />
-              Try Demo
+              {t.hero.buttons.tryDemo}
             </Button>
             <Button variant="outline" className="hover:scale-105 transition-all duration-300">
               <ExternalLink className="h-4 w-4 mr-2" />
-              Learn More
+              {t.hero.buttons.learnMore}
             </Button>
           </div>
         </div>
@@ -65,7 +212,7 @@ const DemoContent = () => {
       <section className="py-12 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-            Test the Accessibility Features
+            {t.features.title}
           </h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -78,20 +225,19 @@ const DemoContent = () => {
                     alt="Text sizing illustration"
                     className="w-12 h-12 rounded-lg object-cover"
                   />
-                  <CardTitle className="text-xl">Font Size Control</CardTitle>
+                  <CardTitle className="text-xl">{t.features.fontSizeControl.title}</CardTitle>
                 </div>
                 <CardDescription>
-                  Adjust text size from 80% to 150% to improve readability for users with visual impairments.
+                  {t.features.fontSizeControl.description}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  This text will resize when you adjust the font size setting. 
-                  Try increasing or decreasing the text size to see how it affects readability.
+                  {t.features.fontSizeControl.content}
                 </p>
                 <a href="#demo" className="inline-block w-full">
                   <Button variant="outline" className="w-full hover:scale-105 transition-all">
-                    Example Button
+                    {t.features.fontSizeControl.button}
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 </a>
@@ -107,20 +253,19 @@ const DemoContent = () => {
                     alt="Contrast adjustment illustration"
                     className="w-12 h-12 rounded-lg object-cover"
                   />
-                  <CardTitle className="text-xl">Contrast Control</CardTitle>
+                  <CardTitle className="text-xl">{t.features.contrastControl.title}</CardTitle>
                 </div>
                 <CardDescription>
-                  Adjustable contrast from 50% to 200% for better visibility and reduced eye strain.
+                  {t.features.contrastControl.description}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  When contrast is adjusted, all colors become more or less vivid 
-                  and text becomes easier to distinguish from backgrounds.
+                  {t.features.contrastControl.content}
                 </p>
                 <div className="flex gap-2">
-                  <Button size="sm" className="hover:scale-105 transition-all">Primary</Button>
-                  <Button variant="secondary" size="sm" className="hover:scale-105 transition-all">Secondary</Button>
+                  <Button size="sm" className="hover:scale-105 transition-all">{t.features.contrastControl.buttons.primary}</Button>
+                  <Button variant="secondary" size="sm" className="hover:scale-105 transition-all">{t.features.contrastControl.buttons.secondary}</Button>
                 </div>
               </CardContent>
             </Card>
@@ -134,18 +279,17 @@ const DemoContent = () => {
                     alt="Dyslexia-friendly font illustration"
                     className="w-12 h-12 rounded-lg object-cover"
                   />
-                  <CardTitle className="text-xl">Dyslexia-Friendly Font</CardTitle>
+                  <CardTitle className="text-xl">{t.features.dyslexiaFont.title}</CardTitle>
                 </div>
                 <CardDescription>
-                  OpenDyslexic font designed to reduce reading errors and improve comprehension.
+                  {t.features.dyslexiaFont.description}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  This text will change to OpenDyslexic font when the dyslexia-friendly 
-                  option is enabled. The font is specially designed to make reading easier.
+                  {t.features.dyslexiaFont.content}
                 </p>
-                <Badge className="hover:scale-105 transition-all">Try Me!</Badge>
+                <Badge className="hover:scale-105 transition-all">{t.features.dyslexiaFont.badge}</Badge>
               </CardContent>
             </Card>
           </div>
@@ -156,7 +300,7 @@ const DemoContent = () => {
       <section className="py-12 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-foreground text-center mb-8">
-            Image Gallery - Test Hide Images Feature
+            {t.gallery.title}
           </h2>
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <div className="group relative overflow-hidden rounded-lg hover:scale-105 transition-all duration-300">
@@ -166,7 +310,7 @@ const DemoContent = () => {
                 className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <Badge className="text-white">Accessibility Tools</Badge>
+                <Badge className="text-white">{t.gallery.badges.accessibilityTools}</Badge>
               </div>
             </div>
             <div className="group relative overflow-hidden rounded-lg hover:scale-105 transition-all duration-300">
@@ -176,7 +320,7 @@ const DemoContent = () => {
                 className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <Badge className="text-white">User Interface</Badge>
+                <Badge className="text-white">{t.gallery.badges.userInterface}</Badge>
               </div>
             </div>
             <div className="group relative overflow-hidden rounded-lg hover:scale-105 transition-all duration-300">
@@ -186,7 +330,7 @@ const DemoContent = () => {
                 className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <Badge className="text-white">Inclusive Design</Badge>
+                <Badge className="text-white">{t.gallery.badges.inclusiveDesign}</Badge>
               </div>
             </div>
           </div>
@@ -198,59 +342,55 @@ const DemoContent = () => {
         <div className="max-w-4xl mx-auto">
           <article className="prose prose-lg max-w-none animate-fade-in">
             <h2 className="text-3xl font-bold text-foreground mb-6">
-              Why Accessibility Matters
+              {t.article.title}
             </h2>
             
             <p className="text-muted-foreground mb-6">
-              Web accessibility ensures that websites, tools, and technologies are designed 
-              and developed so that people with disabilities can use them. This includes 
-              people with visual, auditory, motor, and cognitive disabilities.
+              {t.article.intro}
             </p>
 
             <div className="flex gap-4 mb-6">
               <a href="https://www.w3.org/WAI/" className="story-link text-primary hover:underline">
-                Learn more about WAI Guidelines
+                {t.article.links.wai}
               </a>
               <a href="https://webaim.org/" className="story-link text-primary hover:underline">
-                WebAIM Resources
+                {t.article.links.webaim}
               </a>
               <a href="https://www.ada.gov/" className="story-link text-primary hover:underline">
-                ADA Compliance Information
+                {t.article.links.ada}
               </a>
             </div>
 
             <h3 className="text-2xl font-semibold text-foreground mb-4">
-              Benefits for Everyone
+              {t.article.benefitsTitle}
             </h3>
             
             <ul className="list-disc list-inside text-muted-foreground space-y-2 mb-6">
-              <li>Improved readability for users with dyslexia or reading difficulties</li>
-              <li>Better contrast for users with visual impairments or in bright environments</li>
-              <li>Flexible text sizing for users with varying vision needs</li>
-              <li>Enhanced usability for all users, not just those with disabilities</li>
+              {t.article.benefits.map((benefit, index) => (
+                <li key={index}>{benefit}</li>
+              ))}
             </ul>
 
             <blockquote className="border-l-4 border-primary pl-6 italic text-foreground my-8 animate-slide-in-right">
-              "The power of the Web is in its universality. Access by everyone regardless 
-              of disability is an essential aspect." - Tim Berners-Lee, W3C Director
+              {t.article.quote}
             </blockquote>
 
             <div className="flex flex-wrap gap-4 mt-8">
               <Button className="flex items-center gap-2 hover:scale-105 transition-all duration-300">
                 <Heart className="h-4 w-4" />
-                Like
+                {t.article.buttons.like}
               </Button>
               <Button variant="outline" className="flex items-center gap-2 hover:scale-105 transition-all duration-300">
                 <MessageCircle className="h-4 w-4" />
-                Comment
+                {t.article.buttons.comment}
               </Button>
               <Button variant="outline" className="flex items-center gap-2 hover:scale-105 transition-all duration-300">
                 <Share2 className="h-4 w-4" />
-                Share
+                {t.article.buttons.share}
               </Button>
               <Button variant="outline" className="flex items-center gap-2 hover:scale-105 transition-all duration-300">
                 <Star className="h-4 w-4" />
-                Save
+                {t.article.buttons.save}
               </Button>
             </div>
           </article>
@@ -268,7 +408,7 @@ const DemoContent = () => {
       <footer className="py-8 px-4 border-t border-border">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-muted-foreground">
-            Skillblend Accessibility Widget Demo • Built with React & Tailwind CSS
+            {t.footer}
           </p>
         </div>
       </footer>
