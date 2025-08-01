@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, Send, X } from 'lucide-react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { supabase } from '@/integrations/supabase/client';
 
 type Language = 'en' | 'es';
 
@@ -39,22 +39,17 @@ const AiChatbot: React.FC<AiChatbotProps> = ({ language }) => {
     
     setIsLoading(true);
     try {
-      // For demo purposes, using a placeholder API key
-      // In production, this should come from Supabase secrets
-      const apiKey = 'YOUR_GEMINI_API_KEY_HERE'; // This should be replaced with actual API key
-      
-      if (apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
-        // Fallback demo response when no API key is provided
-        setResponse(`Demo response: Thank you for asking "${question}". This is a demo response. Please configure your Google Gemini API key in Supabase secrets to get real AI responses.`);
-      } else {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-        
-        const result = await model.generateContent(question);
-        const response = await result.response;
-        setResponse(response.text());
+      const { data, error } = await supabase.functions.invoke('ai-chat', {
+        body: { message: question }
+      });
+
+      if (error) {
+        throw new Error(error.message);
       }
+
+      setResponse(data.response);
     } catch (error) {
+      console.error('AI Chat Error:', error);
       setResponse('Sorry, I encountered an error. Please try again later.');
     } finally {
       setIsLoading(false);
