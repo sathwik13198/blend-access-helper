@@ -122,13 +122,18 @@ const AccessibilityWidget = () => {
 
   const [language, setLanguage] = useState<Language>('en');
 
-  // Load settings from localStorage on mount
+  // Load settings and language from localStorage on mount
   useEffect(() => {
     const savedSettings = localStorage.getItem('accessibility-settings');
     if (savedSettings) {
       const parsed = JSON.parse(savedSettings);
       setSettings(prev => ({ ...prev, ...parsed }));
       applySettings(parsed);
+    }
+
+    const savedLanguage = localStorage.getItem('accessibility-language');
+    if (savedLanguage && (savedLanguage === 'en' || savedLanguage === 'es')) {
+      setLanguage(savedLanguage as Language);
     }
   }, []);
 
@@ -249,8 +254,13 @@ const AccessibilityWidget = () => {
     updateSettings(defaultSettings);
   };
 
+  const updateLanguage = (newLanguage: Language) => {
+    setLanguage(newLanguage);
+    localStorage.setItem('accessibility-language', newLanguage);
+  };
+
   const resetLanguage = () => {
-    setLanguage('en');
+    updateLanguage('en');
   };
 
   const t = translations[language];
@@ -291,7 +301,7 @@ const AccessibilityWidget = () => {
                 </label>
               </div>
               <div className="flex gap-2">
-                <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
+                <Select value={language} onValueChange={(value: Language) => updateLanguage(value)}>
                   <SelectTrigger className="flex-1">
                     <SelectValue />
                   </SelectTrigger>
