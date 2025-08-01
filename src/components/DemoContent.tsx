@@ -156,8 +156,9 @@ const translations = {
 const DemoContent = () => {
   // Get current language from accessibility widget
   const getCurrentLanguage = () => {
-    const langElement = document.querySelector('[data-current-language]');
-    return (langElement?.getAttribute('data-current-language') as 'en' | 'es') || 'en';
+    const langFromDOM = document.documentElement.getAttribute('data-current-language') as 'en' | 'es';
+    const langFromStorage = localStorage.getItem('accessibility-language') as 'en' | 'es';
+    return langFromDOM || langFromStorage || 'en';
   };
 
   const [currentLanguage, setCurrentLanguage] = React.useState<'en' | 'es'>('en');

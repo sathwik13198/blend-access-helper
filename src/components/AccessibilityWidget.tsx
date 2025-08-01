@@ -134,6 +134,9 @@ const AccessibilityWidget = () => {
     const savedLanguage = localStorage.getItem('accessibility-language');
     if (savedLanguage && (savedLanguage === 'en' || savedLanguage === 'es')) {
       setLanguage(savedLanguage as Language);
+      document.documentElement.setAttribute('data-current-language', savedLanguage);
+    } else {
+      document.documentElement.setAttribute('data-current-language', 'en');
     }
   }, []);
 
@@ -257,6 +260,8 @@ const AccessibilityWidget = () => {
   const updateLanguage = (newLanguage: Language) => {
     setLanguage(newLanguage);
     localStorage.setItem('accessibility-language', newLanguage);
+    // Update DOM attribute for other components to detect
+    document.documentElement.setAttribute('data-current-language', newLanguage);
   };
 
   const resetLanguage = () => {
