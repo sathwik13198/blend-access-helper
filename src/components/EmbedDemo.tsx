@@ -9,12 +9,27 @@ const EmbedDemo = () => {
   const [previewMode, setPreviewMode] = useState<'script' | 'cdn'>('script');
 
   const scriptTag = `<script src="/widget.js" data-auto-init="true"></script>`;
-  const cdnScript = `<script src="https://cdn.skillblend.com/a11y-widget/latest/widget.js"></script>`;
-  const manualInit = `<script>
+  
+  const cdnScript = `<!-- CDN Integration - Replace with your actual CDN URL -->
+<script src="https://cdn.jsdelivr.net/gh/yourusername/accessibility-widget@latest/dist-embed/widget.umd.js" data-auto-init="true"></script>`;
+  
+  const manualInit = `<script src="/widget.js" data-auto-init="false"></script>
+<script>
   // Manual initialization with options
   window.SkillblendA11y.init({
     position: 'bottom-right', // bottom-left, top-right, top-left
     theme: 'auto' // light, dark, auto
+  });
+  
+  // Optional: Destroy widget programmatically
+  // window.SkillblendA11y.destroy();
+</script>`;
+
+  const cdnManualInit = `<script src="https://cdn.jsdelivr.net/gh/yourusername/accessibility-widget@latest/dist-embed/widget.umd.js" data-auto-init="false"></script>
+<script>
+  window.SkillblendA11y.init({
+    position: 'bottom-left',
+    theme: 'dark'
   });
 </script>`;
 
@@ -125,19 +140,76 @@ const EmbedDemo = () => {
                 </div>
               </div>
             </div>
-          ) : (
-            <div>
-              <h4 className="font-semibold mb-2">CDN Integration (Coming Soon)</h4>
-              <div className="relative">
-                <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto opacity-50">
-                  <code>{cdnScript}</code>
-                </pre>
-                <Badge variant="secondary" className="absolute top-2 right-2">
-                  Coming Soon
-                </Badge>
+           ) : (
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-2">Basic CDN Integration</h4>
+                <div className="relative">
+                  <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
+                    <code>{cdnScript}</code>
+                  </pre>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="absolute top-2 right-2"
+                    onClick={() => copyToClipboard(cdnScript)}
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-2">Advanced CDN Configuration</h4>
+                <div className="relative">
+                  <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
+                    <code>{cdnManualInit}</code>
+                  </pre>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="absolute top-2 right-2"
+                    onClick={() => copyToClipboard(cdnManualInit)}
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
             </div>
           )}
+        </div>
+      </Card>
+
+      {/* Build Instructions */}
+      <Card className="p-6">
+        <h3 className="font-semibold mb-4">Building for CDN</h3>
+        <div className="space-y-4">
+          <div>
+            <h4 className="font-medium mb-2">1. Build the embeddable widget</h4>
+            <div className="relative">
+              <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
+                <code>npm run build:embed</code>
+              </pre>
+              <Button
+                size="sm"
+                variant="outline"
+                className="absolute top-2 right-2"
+                onClick={() => copyToClipboard('npm run build:embed')}
+              >
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              This creates <code>dist-embed/widget.umd.js</code> - a standalone bundle ready for CDN hosting.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-medium mb-2">2. Host on your CDN</h4>
+            <p className="text-sm text-muted-foreground">
+              Upload the generated <code>widget.umd.js</code> file to your preferred CDN service (jsdelivr, unpkg, cloudflare, etc.) and update the script src URL in your integration code.
+            </p>
+          </div>
         </div>
       </Card>
 
@@ -148,12 +220,12 @@ const EmbedDemo = () => {
           The accessibility widget on this page is a live demonstration. Try the settings in the floating button to see real-time changes!
         </p>
         <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary">✓ Contrast Adjustment</Badge>
           <Badge variant="secondary">✓ Font Size Control</Badge>
-          <Badge variant="secondary">✓ Dark/Light Mode</Badge>
-          <Badge variant="secondary">✓ Dyslexia Support</Badge>
-          <Badge variant="secondary">✓ Animation Controls</Badge>
-          <Badge variant="secondary">✓ Link Highlighting</Badge>
+          <Badge variant="secondary">✓ High Contrast Mode</Badge>
+          <Badge variant="secondary">✓ Language Switching</Badge>
+          <Badge variant="secondary">✓ Screen Reader Support</Badge>
+          <Badge variant="secondary">✓ Keyboard Navigation</Badge>
+          <Badge variant="secondary">✓ Auto-initialization</Badge>
         </div>
       </Card>
     </div>
